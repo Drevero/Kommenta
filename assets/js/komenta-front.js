@@ -8,6 +8,40 @@ class KomentaWindow {
     getTooltipInstance(parentNode) {
         return parentNode.querySelector('.emotion-tooltip');
     }
+    async submitVote(idComment, labelEmotion) {
+        try {
+            const formData = new FormData();
+            formData.append('action', 'komenta_vote');
+            formData.append('nonce', komentaData.nonce);
+            formData.append('id_comment', idComment);
+            formData.append('reaction', labelEmotion);
+
+            let callVote=await fetch(komentaData.ajaxUrl, {
+                method: "POST",
+                body: formData
+            });
+            let callResponse=await callVote.json();
+            if(callResponse.success) {
+                // Success
+                // Refreshing vote DOM 
+                let commentContainer=document.querySelector(`.container-kommenta-inline[data-comment-id="${idComment}"]`);
+                const reactions=callResponse.data.reactions;
+                const total=Object.values(reactions).reduce((sum, n) => sum + Number(n), 0);
+                Object.keys(reactions).forEach((reaction) => {
+                    const el=commentContainer.querySelector(`.emotion-reaction[data-reaction="${reaction}"]`);
+                    if(el) {
+                        const count=reactions[reaction];
+                        el.setAttribute('data-number', count);
+                        el.style.width=total > 0 ? `${(Number(count)*100/total)}%` : '0%';
+                    }
+                });
+                return;
+            }
+            // Error
+        } catch (_) {
+            console.error('Error during sending vote', _);
+        }
+    }
 }
 document.addEventListener('DOMContentLoaded', () => {
     window.komenta=new KomentaWindow();
@@ -24,21 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
         allEmotions.map((emotion) => {
             let emotionColor=emotion.style.background;
             let emotionText=emotion.getAttribute('data-label');
-            console.log('Emotion text', emotionText);
             emotion.addEventListener("mousemove", (el) => {
                 const containerRect=allKomentaInstances[i].getBoundingClientRect();
                 tooltipEmotion.style.background=emotionColor;
                 tooltipCurrent.style.borderColor=emotionColor;
                 tooltipCurrent.style.transform='translateY(0px)';
                 tooltipCurrent.style.opacity='1';
+                let numberVote=emotion.getAttribute('data-number');
                 const x=el.clientX-containerRect.left-(tooltipCurrent.offsetWidth/2);
                 const y=el.clientY-containerRect.top-tooltipCurrent.offsetHeight+55;
                 tooltipCurrent.style.left=`${x}px`;
                 tooltipCurrent.style.top=`${y}px`;
-                
+
                 // Injecting the content
-                console.log(tooltipText);
-                tooltipText.innerText=`${emotionText} (15 votes)`;
+                tooltipText.innerText=`${emotionText} (${numberVote} votes)`;
+            });
+
+            emotion.addEventListener("click", () => {
+                komenta.submitVote(allKomentaInstances[i].getAttribute('data-comment-id'), emotion.getAttribute('data-reaction'));
             });
             emotion.addEventListener("mouseout", (el) => {
                 
