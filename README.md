@@ -1,0 +1,2 @@
+# Kommenta
+Wordpress comment enhancer
