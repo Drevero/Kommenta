@@ -1,0 +1,58 @@
+.container-kommenta-inline {
+    display: flex;
+    width: 100%;
+    min-height: 9px;
+    max-height: 9px;
+    height: 100%;
+    position: relative;
+}
+.container-kommenta-inline .emotion-reaction {
+    display: flex;
+    cursor: pointer;
+    width: 100%;
+    background: attr(data-color);
+    transition: 0.15s all ease-in-out;
+}
+.container-kommenta-inline .emotion-reaction:hover {
+    width: 170%;
+    transform: scaleY(1.3);
+}
+.container-kommenta-inline .emotion-reaction:first-child {
+    border-radius: 20px 0px 0px 20px;
+}
+.container-kommenta-inline .emotion-reaction:last-child {
+    border-radius: 0px 20px 20px 0px;
+}
+.emotion-tooltip {
+    display: flex;
+    position: absolute;
+    border-width: 3px;
+    border-color: red;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    gap: 10px;
+    border-radius: 5px;
+    background: #1b1b1ba9;
+    user-select: none;
+    transform: translateY(40px);
+    padding: 5px 9px;
+    top: 20px;
+    transition: 0.2s opacity ease-in-out, 0.25s transform ease-in-out;
+}
+.badge-emotion {
+    display: inline-block;
+    position: relative;
+    height: 7px;
+    transition: 0.25s all ease-in-out;
+    width: 7px;
+    border-radius: 100%;
+    background: red;
+}
+.emotion-name {
+    color: white;
+    font-size: 0.9em;
+}
