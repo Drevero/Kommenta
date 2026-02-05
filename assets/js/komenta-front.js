@@ -9,6 +9,9 @@ class KomentaWindow {
         return parentNode.querySelector('.emotion-tooltip');
     }
     async submitVote(idComment, labelEmotion) {
+        let commentContainer=document.querySelector(`.container-kommenta-inline[data-comment-id="${idComment}"]`);
+        let loaderComment=commentContainer.querySelector('.loader-comment');
+        loaderComment.style.display='block';
         try {
             const formData = new FormData();
             formData.append('action', 'komenta_vote');
@@ -24,23 +27,40 @@ class KomentaWindow {
             if(callResponse.success) {
                 // Success
                 // Refreshing vote DOM 
-                let commentContainer=document.querySelector(`.container-kommenta-inline[data-comment-id="${idComment}"]`);
-                const reactions=callResponse.data.reactions;
-                const total=Object.values(reactions).reduce((sum, n) => sum + Number(n), 0);
-                Object.keys(reactions).forEach((reaction) => {
-                    const el=commentContainer.querySelector(`.emotion-reaction[data-reaction="${reaction}"]`);
-                    if(el) {
-                        const count=reactions[reaction];
-                        el.setAttribute('data-number', count);
-                        el.style.width=total > 0 ? `${(Number(count)*100/total)}%` : '0%';
-                    }
-                });
+                if(callResponse.data.success) {
+                    this.showToast("+ 1 Vote envoyé", 'success', idComment);
+                    const reactions=callResponse.data.reactions;
+                    const total=Object.values(reactions).reduce((sum, n) => sum + Number(n), 0);
+                    commentContainer.querySelector('.total-vote-count span').innerText=total;
+                    Object.keys(reactions).forEach((reaction) => {
+                        const el=commentContainer.querySelector(`.emotion-reaction[data-reaction="${reaction}"]`);
+                        if(el) {
+                            const count=reactions[reaction];
+                            el.setAttribute('data-number', count);
+                            el.style.width=total > 0 ? `${(Number(count)*100/total)}%` : '0%';
+                        }
+                    });
+                } else {
+                    this.showToast("Vous avez déjà voté pour ce post", 'failure', idComment);
+                }
                 return;
             }
             // Error
         } catch (_) {
+            this.showToast("Une erreur système nous empêche de compter votre vote", 'failure', idComment);
             console.error('Error during sending vote', _);
+        } finally {
+            loaderComment.style.display='none';
         }
+    }
+    showToast(toastText, type, commentID) {
+        let toastComment=document.querySelector(`.container-kommenta-inline[data-comment-id="${commentID}"] .toast-comment`);
+        toastComment.innerText=toastText;
+        toastComment.setAttribute('type-toast', type);
+        toastComment.classList.add('show-toast');
+        setTimeout(() => {
+            toastComment.classList.remove('show-toast');
+        }, 800);
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
