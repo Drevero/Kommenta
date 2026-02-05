@@ -8,9 +8,24 @@ class KomentaWindow {
     getTooltipInstance(parentNode) {
         return parentNode.querySelector('.emotion-tooltip');
     }
+    throttle(callback, delay = 16) {
+        let lastCall = 0;
+        let lastArgs = null;
+        
+        return function(...args) {
+            const now = Date.now();
+            lastArgs = args;
+            
+            if (now - lastCall >= delay) {
+                lastCall = now;
+                callback.apply(this, lastArgs);
+            }
+        };
+    }
     async submitVote(idComment, labelEmotion) {
         let commentContainer=document.querySelector(`.container-kommenta-inline[data-comment-id="${idComment}"]`);
         let loaderComment=commentContainer.querySelector('.loader-comment');
+        if(!commentContainer || !loaderComment) return;
         loaderComment.style.display='block';
         try {
             const formData = new FormData();
@@ -46,9 +61,9 @@ class KomentaWindow {
                 return;
             }
             // Error
-        } catch (_) {
+        } catch (e) {
             this.showToast("Une erreur système nous empêche de compter votre vote", 'failure', idComment);
-            console.error('Error during sending vote', _);
+            console.error('Error during sending vote', e);
         } finally {
             loaderComment.style.display='none';
         }
@@ -66,19 +81,17 @@ class KomentaWindow {
 document.addEventListener('DOMContentLoaded', () => {
     window.komenta=new KomentaWindow();
     let allKomentaInstances=komenta.getAllKomentaInstances();
-    console.log(allKomentaInstances);
     for(let i=0;i<allKomentaInstances.length;i++)
     {
-        console.log(allKomentaInstances[i]);
         let allEmotions=komenta.parseAllKomentaEmotions(allKomentaInstances[i]);
         let tooltipCurrent=komenta.getTooltipInstance(allKomentaInstances[i]);
         let tooltipEmotion=tooltipCurrent.querySelector('.badge-emotion');
         let tooltipText=tooltipCurrent.querySelector('.emotion-name');
         // Adding event listener on each emotions
-        allEmotions.map((emotion) => {
+        allEmotions.forEach((emotion) => {
             let emotionColor=emotion.style.background;
             let emotionText=emotion.getAttribute('data-label');
-            emotion.addEventListener("mousemove", (el) => {
+            const handleMouseMove=window.komenta.throttle((el) => {
                 const containerRect=allKomentaInstances[i].getBoundingClientRect();
                 tooltipEmotion.style.background=emotionColor;
                 tooltipCurrent.style.borderColor=emotionColor;
@@ -92,14 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Injecting the content
                 tooltipText.innerText=`${emotionText} (${numberVote} votes)`;
-            });
+            }, 16);
+            emotion.addEventListener("mousemove", handleMouseMove);
 
             emotion.addEventListener("click", () => {
                 komenta.submitVote(allKomentaInstances[i].getAttribute('data-comment-id'), emotion.getAttribute('data-reaction'));
             });
-            emotion.addEventListener("mouseout", (el) => {
-                
-                setTimeout(() => { tooltipCurrent.style.opacity='0';tooltipCurrent.style.transform='translateY(20px)';                }, 400);
+            emotion.addEventListener("mouseout", () => {
+                setTimeout(() => {
+                    tooltipCurrent.style.opacity='0';
+                    tooltipCurrent.style.transform='translateY(20px)';
+                }, 400);
             });
         });
     }
