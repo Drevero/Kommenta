@@ -1,0 +1,405 @@
+/* ========================================
+   Kommenta Admin — Modern UI
+   ======================================== */
+
+/* Reset WP defaults inside our wrap */
+.kommenta-settings-wrap {
+    max-width: 720px;
+    margin: 20px auto 40px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+/* Header */
+.kommenta-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.kommenta-header .kommenta-logo {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #6bc9a0 0%, #4a9ed6 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.kommenta-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.kommenta-header h1 small {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: #757575;
+    margin-top: 2px;
+}
+
+/* Card */
+.kommenta-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    padding: 0;
+    overflow: hidden;
+}
+
+.kommenta-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kommenta-card-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e1e1e;
+    margin: 0;
+    padding: 0;
+}
+
+.kommenta-card-body {
+    padding: 0;
+}
+
+/* Vote type rows */
+#kommenta-vote-types-list {
+    margin: 0;
+    padding: 0;
+}
+
+.kommenta-vote-type-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.15s ease;
+}
+
+.kommenta-vote-type-row:last-child {
+    border-bottom: none;
+}
+
+.kommenta-vote-type-row:hover {
+    background: #fafbfc;
+}
+
+.kommenta-vote-type-row.new-row {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Color swatch — clickable dot */
+.vote-type-color-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.vote-type-color-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vote-type-color-dot:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Label input */
+.vote-type-fields {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.vote-type-label-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.vote-type-label-wrap input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e1e1e;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.vote-type-label-wrap input:focus {
+    border-color: #6bc9a0;
+    box-shadow: 0 0 0 3px rgba(107, 201, 160, 0.15);
+    outline: none;
+}
+
+.vote-type-label-wrap input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Slug badge */
+.vote-type-slug-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+    color: #757575;
+    white-space: nowrap;
+    flex-shrink: 0;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Delete button */
+.kommenta-remove-type {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none !important;
+    background: transparent !important;
+    color: #b0b0b0 !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    padding: 0 !important;
+    min-height: unset !important;
+    box-shadow: none !important;
+}
+
+.kommenta-remove-type:hover {
+    background: #fef2f2 !important;
+    color: #dc3545 !important;
+}
+
+.kommenta-remove-type .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Hidden fields */
+.vote-type-slug-hidden {
+    display: none;
+}
+
+/* Add row button — dashed zone */
+.kommenta-add-zone {
+    padding: 12px 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+#kommenta-add-type {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed #e0e0e0 !important;
+    border-radius: 10px;
+    background: transparent !important;
+    color: #757575 !important;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: none !important;
+}
+
+#kommenta-add-type:hover {
+    border-color: #6bc9a0 !important;
+    color: #6bc9a0 !important;
+    background: rgba(107, 201, 160, 0.04) !important;
+}
+
+#kommenta-add-type .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Footer actions */
+.kommenta-card-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fafbfc;
+}
+
+#kommenta-save-settings {
+    padding: 9px 24px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    background: #6bc9a0 !important;
+    border-color: #6bc9a0 !important;
+    color: #fff !important;
+    transition: all 0.15s ease;
+    box-shadow: none !important;
+}
+
+#kommenta-save-settings:hover {
+    background: #5bb890 !important;
+    border-color: #5bb890 !important;
+}
+
+#kommenta-save-settings:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#kommenta-reset-defaults {
+    padding: 9px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    background: transparent !important;
+    border: 1.5px solid #e0e0e0 !important;
+    color: #757575 !important;
+    transition: all 0.15s ease;
+    box-shadow: none !important;
+}
+
+#kommenta-reset-defaults:hover {
+    border-color: #ccc !important;
+    color: #555 !important;
+}
+
+/* Toast notification */
+.kommenta-toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.kommenta-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.kommenta-toast.success {
+    background: #22c55e;
+}
+
+.kommenta-toast.error {
+    background: #ef4444;
+}
+
+/* Color picker overrides — hide the WP default and show our dot */
+.kommenta-vote-type-row .wp-picker-container {
+    position: relative;
+}
+
+.kommenta-vote-type-row .wp-picker-container .wp-color-result {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    border: 2px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kommenta-vote-type-row .wp-picker-container .wp-color-result:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+.kommenta-vote-type-row .wp-picker-container .wp-color-result .wp-color-result-text {
+    display: none !important;
+}
+
+.kommenta-vote-type-row .wp-picker-container .wp-picker-input-wrap {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    z-index: 10;
+}
+
+/* Empty state */
+.kommenta-empty-state {
+    padding: 40px 24px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .kommenta-settings-wrap {
+        margin: 10px;
+    }
+
+    .kommenta-vote-type-row {
+        padding: 14px 16px;
+    }
+
+    .vote-type-slug-badge {
+        display: none;
+    }
+
+    .kommenta-card-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #kommenta-save-settings {
+        width: 100%;
+    }
+}

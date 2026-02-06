@@ -54,3 +54,87 @@ msgstr "Negative"
 #: kommenta.php
 msgid "Neutral"
 msgstr "Neutral"
+
+#: kommenta.php
+msgid "Kommenta Settings"
+msgstr "Kommenta Settings"
+
+#: kommenta.php
+msgid "Kommenta"
+msgstr "Kommenta"
+
+#: kommenta.php
+msgid "Are you sure you want to delete this vote type?"
+msgstr "Are you sure you want to delete this vote type?"
+
+#: kommenta.php
+msgid "Settings saved successfully!"
+msgstr "Settings saved successfully!"
+
+#: kommenta.php
+msgid "An error occurred while saving."
+msgstr "An error occurred while saving."
+
+#: kommenta.php
+msgid "Label is required."
+msgstr "Label is required."
+
+#: kommenta.php
+msgid "Security check failed"
+msgstr "Security check failed"
+
+#: kommenta.php
+msgid "Permission denied"
+msgstr "Permission denied"
+
+#: kommenta.php
+msgid "Vote Types"
+msgstr "Vote Types"
+
+#: kommenta.php
+msgid "Configure the types of votes users can give to comments."
+msgstr "Configure the types of votes users can give to comments."
+
+#: kommenta.php
+msgid "Label"
+msgstr "Label"
+
+#: kommenta.php
+msgid "Vote label"
+msgstr "Vote label"
+
+#: kommenta.php
+msgid "Slug"
+msgstr "Slug"
+
+#: kommenta.php
+msgid "Slug cannot be changed after creation"
+msgstr "Slug cannot be changed after creation"
+
+#: kommenta.php
+msgid "Color"
+msgstr "Color"
+
+#: kommenta.php
+msgid "Preview"
+msgstr "Preview"
+
+#: kommenta.php
+msgid "Remove"
+msgstr "Remove"
+
+#: kommenta.php
+msgid "Add Vote Type"
+msgstr "Add Vote Type"
+
+#: kommenta.php
+msgid "Reset to Defaults"
+msgstr "Reset to Defaults"
+
+#: kommenta.php
+msgid "Save Settings"
+msgstr "Save Settings"
+
+#: kommenta.php
+msgid "Auto-generated"
+msgstr "Auto-generated"
