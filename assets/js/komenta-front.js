@@ -43,7 +43,7 @@ class KomentaWindow {
                 // Success
                 // Refreshing vote DOM 
                 if(callResponse.data.success) {
-                    this.showToast("+ 1 Vote envoyé", 'success', idComment);
+                    this.showToast(komentaData.i18n.voteSent, 'success', idComment);
                     const reactions=callResponse.data.reactions;
                     const total=Object.values(reactions).reduce((sum, n) => sum + Number(n), 0);
                     commentContainer.querySelector('.total-vote-count span').innerText=total;
@@ -56,13 +56,13 @@ class KomentaWindow {
                         }
                     });
                 } else {
-                    this.showToast("Vous avez déjà voté pour ce post", 'failure', idComment);
+                    this.showToast(komentaData.i18n.alreadyVoted, 'failure', idComment);
                 }
                 return;
             }
             // Error
         } catch (e) {
-            this.showToast("Une erreur système nous empêche de compter votre vote", 'failure', idComment);
+            this.showToast(komentaData.i18n.systemError, 'failure', idComment);
             console.error('Error during sending vote', e);
         } finally {
             loaderComment.style.display='none';
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tooltipCurrent.style.top=`${y}px`;
 
                 // Injecting the content
-                tooltipText.innerText=`${emotionText} (${numberVote} votes)`;
+                tooltipText.innerText=`${emotionText} (${numberVote} ${komentaData.i18n.votes})`;
             }, 16);
             emotion.addEventListener("mousemove", handleMouseMove);
 

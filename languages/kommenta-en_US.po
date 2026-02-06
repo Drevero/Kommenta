@@ -1,0 +1,56 @@
+# English (US) translation for Kommenta
+# Copyright (C) 2026 Rémi Duplé
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Kommenta 1.0.0\n"
+"Report-Msgid-Bugs-To: https://remi-duple.fr/\n"
+"POT-Creation-Date: 2026-02-05\n"
+"PO-Revision-Date: 2026-02-05\n"
+"Last-Translator: Rémi Duplé\n"
+"Language-Team: English (US)\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: kommenta.php
+msgid "+ 1 Vote sent"
+msgstr "+ 1 Vote sent"
+
+#: kommenta.php
+msgid "You already voted for this post"
+msgstr "You already voted for this post"
+
+#: kommenta.php
+msgid "A system error prevents us from counting your vote"
+msgstr "A system error prevents us from counting your vote"
+
+#: kommenta.php
+msgid "votes"
+msgstr "votes"
+
+#: kommenta.php
+msgid "You're not allowed to execute this action"
+msgstr "You're not allowed to execute this action"
+
+#: kommenta.php
+msgid "Invalid comment ID"
+msgstr "Invalid comment ID"
+
+#: kommenta.php
+msgid "You already voted"
+msgstr "You already voted"
+
+#: kommenta.php
+msgid "Positive"
+msgstr "Positive"
+
+#: kommenta.php
+msgid "Negative"
+msgstr "Negative"
+
+#: kommenta.php
+msgid "Neutral"
+msgstr "Neutral"
