@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Kommenta_Wordpress {
     private $commentMetaKey = 'kommenta_meta_comment';
     private static $optionKey = 'kommenta_vote_types';
+    private static $notifyOptionKey = 'kommenta_notify_enabled';
     private static $instance = null;
 
     public static function get_instance() {
@@ -42,6 +43,7 @@ class Kommenta_Wordpress {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
         add_action('wp_ajax_kommenta_save_vote_types', array($this, 'save_vote_types_ajax'));
+        add_action('wp_ajax_kommenta_save_notification', array($this, 'save_notification_ajax'));
     }
 
     /**
@@ -233,6 +235,85 @@ class Kommenta_Wordpress {
     }
 
     /**
+     * Save notification setting via AJAX
+     */
+    public function save_notification_ajax() {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'kommenta_admin')) {
+            wp_send_json_error(array('message' => __('Security check failed', 'kommenta')));
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => __('Permission denied', 'kommenta')));
+            return;
+        }
+
+        $enabled = isset($_POST['enabled']) && $_POST['enabled'] === '1' ? '1' : '0';
+        update_option(self::$notifyOptionKey, $enabled);
+
+        wp_send_json_success(array('enabled' => $enabled));
+    }
+
+    /**
+     * Check if notifications are enabled
+     */
+    public static function isNotifyEnabled() {
+        return get_option(self::$notifyOptionKey, '0') === '1';
+    }
+
+    /**
+     * Send notification email to comment author when someone reacts
+     */
+    private function sendReactionNotification($comment_id, $reaction) {
+        if (!self::isNotifyEnabled()) {
+            return;
+        }
+
+        $comment = get_comment($comment_id);
+        if (!$comment || empty($comment->comment_author_email)) {
+            return;
+        }
+
+        // Don't notify if the comment author email is empty or invalid
+        if (!is_email($comment->comment_author_email)) {
+            return;
+        }
+
+        $vote_types = self::getVoteType();
+        $reaction_label = $reaction;
+        foreach ($vote_types as $type) {
+            if ($type['slug'] === $reaction) {
+                $reaction_label = $type['label'];
+                break;
+            }
+        }
+
+        $post = get_post($comment->comment_post_ID);
+        $post_title = $post ? $post->post_title : __('Unknown post', 'kommenta');
+        $post_url = get_permalink($comment->comment_post_ID);
+
+        $subject = sprintf(
+            /* translators: %s: post title */
+            __('Someone reacted to your comment on "%s"', 'kommenta'),
+            $post_title
+        );
+
+        $message = sprintf(
+            /* translators: 1: comment author name, 2: reaction label, 3: comment excerpt, 4: post title, 5: post URL */
+            __("Hi %1\$s,\n\nSomeone just reacted with \"%2\$s\" to your comment:\n\n\"%3\$s\"\n\non the post \"%4\$s\".\n\nSee the post: %5\$s\n\n Kommenta", 'kommenta'),
+            $comment->comment_author,
+            $reaction_label,
+            wp_trim_words($comment->comment_content, 20, '…'),
+            $post_title,
+            $post_url
+        );
+
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+        wp_mail($comment->comment_author_email, $subject, $message, $headers);
+    }
+
+    /**
      * Check if slug already exists in array
      */
     private function slugExists($slug, $types) {
@@ -249,6 +330,7 @@ class Kommenta_Wordpress {
      */
     public function render_settings_page() {
         $vote_types = self::getVoteType();
+        $notify_enabled = self::isNotifyEnabled();
         include_once(__DIR__ . '/templates/komenta-admin-page.php');
     }
 
@@ -425,6 +507,10 @@ class Kommenta_Wordpress {
             wp_send_json_success(['success' => false, 'comment_id' => $comment_id, 'reactions' => $returnVote->emotions, 'message' => __('You already voted', 'kommenta')]);
         }
         $returnVote=$this->addVoteComment($comment_id, $reaction, $ipUser);
+
+        // Send email notification to comment author if enabled
+        $this->sendReactionNotification($comment_id, $reaction);
+
         wp_send_json_success(['success' => true, 'comment_id' => $comment_id, 'reactions' => $returnVote->emotions]);
     }
 }

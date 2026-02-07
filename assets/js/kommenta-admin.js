@@ -223,6 +223,41 @@
                 resetToDefaults();
             }
         });
+
+        // Notification toggle — instant save
+        $('#kommenta-notify-toggle').on('change', function() {
+            var enabled = $(this).is(':checked') ? '1' : '0';
+            var $toggle = $(this);
+            $toggle.prop('disabled', true);
+
+            $.ajax({
+                url: kommentaAdmin.ajaxUrl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'kommenta_save_notification',
+                    nonce: kommentaAdmin.nonce,
+                    enabled: enabled
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showToast(kommentaAdmin.i18n.saved, 'success');
+                    } else {
+                        var msg = (response.data && response.data.message) ? response.data.message : kommentaAdmin.i18n.error;
+                        showToast(msg, 'error');
+                        // Revert toggle on failure
+                        $toggle.prop('checked', !$toggle.is(':checked'));
+                    }
+                },
+                error: function() {
+                    showToast(kommentaAdmin.i18n.error, 'error');
+                    $toggle.prop('checked', !$toggle.is(':checked'));
+                },
+                complete: function() {
+                    $toggle.prop('disabled', false);
+                }
+            });
+        });
     });
 
 })(jQuery);

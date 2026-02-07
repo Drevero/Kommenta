@@ -382,6 +382,97 @@
     font-size: 14px;
 }
 
+/* Margin top utility */
+.mt-5 {
+    margin-top: 20px;
+}
+
+/* ========================================
+   Notification Toggle
+   ======================================== */
+
+.kommenta-notification-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    gap: 20px;
+}
+
+.kommenta-notification-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.kommenta-notification-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.kommenta-notification-desc {
+    font-size: 13px;
+    color: #757575;
+    line-height: 1.5;
+}
+
+/* Toggle switch */
+.kommenta-toggle {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.kommenta-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.kommenta-toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 26px;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.kommenta-toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.kommenta-toggle input:checked + .kommenta-toggle-slider {
+    background: #6bc9a0;
+}
+
+.kommenta-toggle input:checked + .kommenta-toggle-slider::before {
+    transform: translateX(22px);
+}
+
+.kommenta-toggle input:focus + .kommenta-toggle-slider {
+    box-shadow: 0 0 0 3px rgba(107, 201, 160, 0.2);
+}
+
+.kommenta-toggle input:disabled + .kommenta-toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* ========================================
    Stats Page
    ======================================== */
@@ -638,6 +729,11 @@
     line-height: 1.6;
     margin: 0;
 }
+.kommenta-card-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
 /* Responsive */
 @media screen and (max-width: 782px) {
@@ -688,4 +784,8 @@
     .kommenta-emotion-pct {
         order: 2;
     }
+}
+
+.mt-5 {
+    margin-top: 20px;
 }

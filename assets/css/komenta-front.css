@@ -25,6 +25,7 @@
     font-size: 12px;
     min-width: 90px;
     padding: 0px 15px;
+    margin: 0px !important;
     color: grey;
     margin-block-end: 0px !important;
 }
