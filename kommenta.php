@@ -81,16 +81,18 @@ class Kommenta_Wordpress {
             'manage_options',
             'kommenta-settings',
             array($this, 'render_settings_page'),
-            'dashicons-format-chat',
+            "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNDIuNTYgMzQyLjU2Ij4KICA8cGF0aCBkPSJNMTcxLjI4LDBDNzYuNzMuMS4xLDc2LjczLDAsMTcxLjI4djE0My44OGMwLDE1LjE0LDEyLjI3LDI3LjQsMjcuNCwyNy40aDE0My44OGM5NC42LDAsMTcxLjI4LTc2LjY5LDE3MS4yOC0xNzEuMjhTMjY1Ljg4LDAsMTcxLjI4LDBaTTE5MS44MywxNzguMTNjMCwxMS4zNS05LjIsMjAuNTUtMjAuNTUsMjAuNTVzLTIwLjU1LTkuMi0yMC41NS0yMC41NSw5LjItMjAuNTUsMjAuNTUtMjAuNTUsMjAuNTUsOS4yLDIwLjU1LDIwLjU1Wk0xMTYuNDcsMTc4LjEzYzAsMTEuMzUtOS4yLDIwLjU1LTIwLjU1LDIwLjU1cy0yMC41NS05LjItMjAuNTUtMjAuNTUsOS4yLTIwLjU1LDIwLjU1LTIwLjU1LDIwLjU1LDkuMiwyMC41NSwyMC41NVpNMjY3LjIsMTc4LjEzYzAsMTEuMzUtOS4yLDIwLjU1LTIwLjU1LDIwLjU1cy0yMC41NS05LjItMjAuNTUtMjAuNTUsOS4yLTIwLjU1LDIwLjU1LTIwLjU1LDIwLjU1LDkuMiwyMC41NSwyMC41NVoiIHN0eWxlPSJmaWxsOiAjZmZmOyIvPgo8L3N2Zz4=",
             30
         );
+
+        add_submenu_page('kommenta-settings', __('Kommenta Statistic', 'kommenta'), __('Statistiques', 'kommenta'), 'manage_options', 'kommenta-stats', array($this, 'render_stats_page'), 1 );
     }
 
     /**
      * Enqueue admin scripts and styles
      */
     public function admin_enqueue_scripts($hook) {
-        if ($hook !== 'toplevel_page_kommenta-settings') {
+        if ($hook !== 'toplevel_page_kommenta-settings' && $hook!=='kommenta_page_kommenta-stats') {
             return;
         }
         wp_enqueue_style('wp-color-picker');
@@ -247,80 +249,93 @@ class Kommenta_Wordpress {
      */
     public function render_settings_page() {
         $vote_types = self::getVoteType();
-        ?>
-        <div class="wrap kommenta-settings-wrap">
+        include_once(__DIR__ . '/templates/komenta-admin-page.php');
+    }
 
-            <div class="kommenta-header">
-                <div class="kommenta-logo">
-                    <span class="dashicons dashicons-format-chat"></span>
-                </div>
-                <h1>
-                    Kommenta
-                    <small><?php echo esc_html__('Configure the types of votes users can give to comments.', 'kommenta'); ?></small>
-                </h1>
-            </div>
+    /**
+     * Render the statistics page
+     */
+    public function render_stats_page() {
+        $vote_types = self::getVoteType();
 
-            <div class="kommenta-card">
-                <div class="kommenta-card-header">
-                    <h2><?php echo esc_html__('Vote Types', 'kommenta'); ?></h2>
-                </div>
+        // Fetch all comments that have kommenta meta
+        global $wpdb;
+        $meta_key = $this->commentMetaKey;
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT cm.comment_id, cm.meta_value, c.comment_content, c.comment_author, c.comment_date, c.comment_post_ID
+                 FROM {$wpdb->commentmeta} cm
+                 INNER JOIN {$wpdb->comments} c ON c.comment_ID = cm.comment_id
+                 WHERE cm.meta_key = %s",
+                $meta_key
+            )
+        );
 
-                <div class="kommenta-card-body">
-                    <div id="kommenta-vote-types-list">
-                        <?php foreach ($vote_types as $index => $type) : ?>
-                        <div class="kommenta-vote-type-row" data-index="<?php echo $index; ?>">
-                            <input type="text" class="kommenta-color-picker vote-type-slug-hidden" value="<?php echo esc_attr($type['color']); ?>">
-                            <input type="hidden" class="vote-type-slug" value="<?php echo esc_attr($type['slug']); ?>">
-                            <div class="vote-type-fields">
-                                <div class="vote-type-label-wrap">
-                                    <input type="text" class="vote-type-label" value="<?php echo esc_attr($type['label']); ?>" placeholder="<?php echo esc_attr__('Vote label', 'kommenta'); ?>">
-                                </div>
-                                <span class="vote-type-slug-badge"><?php echo esc_html($type['slug']); ?></span>
-                            </div>
-                            <button type="button" class="button kommenta-remove-type" title="<?php echo esc_attr__('Remove', 'kommenta'); ?>">
-                                <span class="dashicons dashicons-no-alt"></span>
-                            </button>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
+        $all_comments_stats = array();
+        $emotion_totals = array();
 
-                    <div class="kommenta-add-zone">
-                        <button type="button" class="button" id="kommenta-add-type">
-                            <span class="dashicons dashicons-plus-alt2"></span>
-                            <?php echo esc_html__('Add Vote Type', 'kommenta'); ?>
-                        </button>
-                    </div>
-                </div>
+        // Initialize emotion totals from configured vote types
+        foreach ($vote_types as $type) {
+            $emotion_totals[$type['slug']] = 0;
+        }
 
-                <div class="kommenta-card-footer">
-                    <button type="button" class="button" id="kommenta-reset-defaults">
-                        <?php echo esc_html__('Reset to Defaults', 'kommenta'); ?>
-                    </button>
-                    <button type="button" class="button button-primary" id="kommenta-save-settings">
-                        <?php echo esc_html__('Save Settings', 'kommenta'); ?>
-                    </button>
-                </div>
-            </div>
+        foreach ($results as $row) {
+            $meta = json_decode($row->meta_value);
+            if (!$meta || !isset($meta->emotions)) {
+                continue;
+            }
 
-            <div class="kommenta-toast" id="kommenta-toast"></div>
-        </div>
+            $emotions = (array) $meta->emotions;
+            $total_votes = array_sum($emotions);
 
-        <script type="text/html" id="tmpl-kommenta-vote-type-row">
-            <div class="kommenta-vote-type-row new-row" data-index="{{data.index}}">
-                <input type="text" class="kommenta-color-picker vote-type-slug-hidden" value="#cccccc">
-                <input type="hidden" class="vote-type-slug" value="">
-                <div class="vote-type-fields">
-                    <div class="vote-type-label-wrap">
-                        <input type="text" class="vote-type-label" value="" placeholder="<?php echo esc_attr__('Vote label', 'kommenta'); ?>">
-                    </div>
-                    <span class="vote-type-slug-badge"><?php echo esc_html__('Auto-generated', 'kommenta'); ?></span>
-                </div>
-                <button type="button" class="button kommenta-remove-type" title="<?php echo esc_attr__('Remove', 'kommenta'); ?>">
-                    <span class="dashicons dashicons-no-alt"></span>
-                </button>
-            </div>
-        </script>
-        <?php
+            if ($total_votes === 0) {
+                continue;
+            }
+
+            // Accumulate global emotion totals
+            foreach ($emotions as $slug => $count) {
+                if (isset($emotion_totals[$slug])) {
+                    $emotion_totals[$slug] += $count;
+                }
+            }
+
+            $post_title = get_the_title($row->comment_post_ID);
+
+            $all_comments_stats[] = array(
+                'comment_id'      => $row->comment_id,
+                'comment_content' => wp_trim_words($row->comment_content, 20, '…'),
+                'comment_author'  => $row->comment_author,
+                'comment_date'    => $row->comment_date,
+                'post_title'      => $post_title,
+                'post_id'         => $row->comment_post_ID,
+                'emotions'        => $emotions,
+                'total_votes'     => $total_votes,
+            );
+        }
+
+        // Sort by total votes descending
+        usort($all_comments_stats, function ($a, $b) {
+            return $b['total_votes'] - $a['total_votes'];
+        });
+
+        // Top 5 comments
+        $top_5_comments = array_slice($all_comments_stats, 0, 5);
+
+        // Sort emotion totals descending
+        arsort($emotion_totals);
+
+        // Grand total of all votes
+        $grand_total_votes = array_sum($emotion_totals);
+
+        // Build a color map from vote types for easy access
+        $color_map = array();
+        $label_map = array();
+        foreach ($vote_types as $type) {
+            $color_map[$type['slug']] = $type['color'];
+            $label_map[$type['slug']] = $type['label'];
+        }
+
+        include_once(__DIR__ . '/templates/komenta-stats-page.php');
     }
 
     public static function getVoteType() {

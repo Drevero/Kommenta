@@ -4,8 +4,8 @@
 
 /* Reset WP defaults inside our wrap */
 .kommenta-settings-wrap {
-    max-width: 720px;
     margin: 20px auto 40px;
+    padding: 0px 20px 0px 0px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
@@ -13,21 +13,23 @@
 .kommenta-header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 0px;
     margin-bottom: 28px;
 }
 
 .kommenta-header .kommenta-logo {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #6bc9a0 0%, #4a9ed6 100%);
+    width: 82px;
+    height: 82px;
     border-radius: 12px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 20px;
     flex-shrink: 0;
+}
+.kommenta-logo img {
+    height: 82px;
 }
 
 .kommenta-header h1 {
@@ -50,7 +52,7 @@
 /* Card */
 .kommenta-card {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 7px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
     padding: 0;
     overflow: hidden;
@@ -380,6 +382,263 @@
     font-size: 14px;
 }
 
+/* ========================================
+   Stats Page
+   ======================================== */
+
+/* Summary boxes */
+.kommenta-stats-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kommenta-stat-box {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.kommenta-stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e1e1e;
+    line-height: 1.2;
+}
+
+.kommenta-stat-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #757575;
+}
+
+/* Stats wrap spacing between cards */
+.kommenta-stats-wrap .kommenta-card {
+    margin-bottom: 20px;
+}
+
+/* Badge in card header */
+.kommenta-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    padding: 2px 10px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Stats table */
+.kommenta-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.kommenta-stats-table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #757575;
+    background: #fafbfc;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+}
+
+.kommenta-stats-table tbody td {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #1e1e1e;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: middle;
+}
+
+.kommenta-stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.kommenta-stats-table tbody tr:hover {
+    background: #fafbfc;
+}
+
+/* Rank badge */
+.kommenta-rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6bc9a0 0%, #4a9ed6 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Column sizing */
+.kommenta-col-rank {
+    width: 50px;
+    text-align: center !important;
+}
+
+.kommenta-col-comment {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kommenta-col-author {
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.kommenta-col-post a {
+    color: #4a9ed6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.kommenta-col-post a:hover {
+    text-decoration: underline;
+}
+
+.kommenta-col-date {
+    white-space: nowrap;
+    color: #757575;
+    font-size: 12px;
+}
+
+.kommenta-col-votes {
+    text-align: center !important;
+    white-space: nowrap;
+}
+
+.kommenta-col-emotion-count {
+    text-align: center !important;
+    white-space: nowrap;
+}
+
+/* Mini bar for top 5 */
+.kommenta-mini-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 100px;
+    background: #f0f0f0;
+}
+
+.kommenta-mini-bar-segment {
+    display: block;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Emotion grid */
+.kommenta-emotion-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kommenta-emotion-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.kommenta-emotion-color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.kommenta-emotion-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 110px;
+}
+
+.kommenta-emotion-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.kommenta-emotion-count {
+    font-size: 12px;
+    color: #757575;
+}
+
+.kommenta-emotion-bar-wrap {
+    flex: 1;
+    height: 10px;
+    border-radius: 5px;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.kommenta-emotion-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+    min-width: 2px;
+}
+
+.kommenta-emotion-pct {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e1e1e;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* Emotion pills in full table */
+.kommenta-emotion-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.kommenta-emotion-zero {
+    color: #ccc;
+    font-size: 12px;
+}
+
+/* Empty state for stats */
+.kommenta-stats-wrap .kommenta-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 24px;
+}
+
+.kommenta-stats-wrap .kommenta-empty-state p {
+    max-width: 400px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* Responsive */
 @media screen and (max-width: 782px) {
     .kommenta-settings-wrap {
@@ -401,5 +660,32 @@
 
     #kommenta-save-settings {
         width: 100%;
+    }
+
+    .kommenta-stats-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .kommenta-stats-table-full {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .kommenta-col-comment {
+        max-width: 180px;
+    }
+
+    .kommenta-emotion-card {
+        flex-wrap: wrap;
+    }
+
+    .kommenta-emotion-bar-wrap {
+        min-width: 100%;
+        order: 3;
+    }
+
+    .kommenta-emotion-pct {
+        order: 2;
     }
 }
