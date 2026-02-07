@@ -523,10 +523,13 @@ add_action('plugins_loaded', function() {
 
 // Hook comment text: 2nd param is the comment object (has comment_ID, comment_post_ID, etc.)
 add_filter('comment_text', function ($comment_text, $comment, $args) {
+    // Prevent show the front version on Wordpress backoffice
+    if(!is_single()) {
+        return $comment_text;
+    }
     $comment_id = isset($comment->comment_ID) ? (int) $comment->comment_ID : 0;
     $commentEmotions=Kommenta_Wordpress::getVoteComment($comment->comment_ID);
     $allTypes=Kommenta_Wordpress::getVoteType();
-    
     if($commentEmotions) {
         $totalVotes=array_sum((array) $commentEmotions->emotions);
         $totalEmotionPurcentage=($totalVotes==0) ? 1 : $totalVotes;
